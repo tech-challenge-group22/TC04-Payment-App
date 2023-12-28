@@ -1,0 +1,57 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Projeto Lanchonete | Tech Challenge",
+    "description": "API Documentation",
+    "version": "1.0.0"
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "basePath": "/",
+  "paths": {
+    "/payment/status": {
+      "get": {
+        "tags": ["Payments"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status de pagamentos listados com sucesso"
+          },
+          "400": {
+            "description": "Erro ao listar status de pagamentos"
+          }
+        }
+      }
+    },
+    "/webhook/confirm_webhook_payment": {
+      "post": {
+        "tags": ["Webhooks"],
+        "responses": {
+          "200": {
+            "description": "Confirmação de pagamento alterada com sucesso"
+          },
+          "400": {
+            "description": "Erro ao atualizar a confirmação de pagamento"
+          }
+        }
+      }
+    }
+  }
+}
