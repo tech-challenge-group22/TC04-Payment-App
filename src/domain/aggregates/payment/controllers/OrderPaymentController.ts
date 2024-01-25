@@ -12,7 +12,7 @@ import {
 import { GetPaymentStatusUseCase } from '../usecases/getPaymentStatus/GetPaymentStatus';
 import { MySQLPaymentRepository } from '../gateways/PaymentRepository';
 import { PaymentConfirmation } from '../usecases/paymentConfirmation/PaymentConfirmation';
-import { ReadPaymentQueue } from '../usecases/readPaymentQueue/ReadPaymentQueue';
+import ReadPaymentQueue from '../usecases/readPaymentQueue/ReadPaymentQueue';
 
 // Adapters
 import AWSSQSAdapter from '../../../../application/adapters/AWSSqsAdapter';
@@ -57,5 +57,7 @@ export class OrderPaymentController {
     );
 
     const result = await paymentQueue.execute();
+
+    return result;
   }
 }
