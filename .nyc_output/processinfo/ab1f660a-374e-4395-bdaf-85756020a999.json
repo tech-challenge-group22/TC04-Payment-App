@@ -1,0 +1,25 @@
+{
+  "parent": null,
+  "pid": 54608,
+  "argv": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "C:\\Users\\coliveira\\robos\\TC04-Payment-App\\node_modules\\@cucumber\\cucumber\\bin\\cucumber.js"
+  ],
+  "execArgv": [],
+  "cwd": "C:\\Users\\coliveira\\robos\\TC04-Payment-App",
+  "time": 1706205793871,
+  "ppid": 39160,
+  "coverageFilename": "C:\\Users\\coliveira\\robos\\TC04-Payment-App\\.nyc_output\\ab1f660a-374e-4395-bdaf-85756020a999.json",
+  "externalId": "",
+  "uuid": "ab1f660a-374e-4395-bdaf-85756020a999",
+  "files": [
+    "C:\\Users\\coliveira\\robos\\TC04-Payment-App\\src\\application\\adapters\\ExpressAdapter.ts",
+    "C:\\Users\\coliveira\\robos\\TC04-Payment-App\\src\\infrastructure\\api\\payment.route.ts",
+    "C:\\Users\\coliveira\\robos\\TC04-Payment-App\\src\\domain\\aggregates\\payment\\controllers\\OrderPaymentController.ts",
+    "C:\\Users\\coliveira\\robos\\TC04-Payment-App\\src\\domain\\aggregates\\payment\\usecases\\getPaymentStatus\\GetPaymentStatus.ts",
+    "C:\\Users\\coliveira\\robos\\TC04-Payment-App\\src\\domain\\aggregates\\payment\\gateways\\PaymentRepository.ts",
+    "C:\\Users\\coliveira\\robos\\TC04-Payment-App\\src\\domain\\aggregates\\payment\\core\\entities\\OrderPaymentEntity.ts",
+    "C:\\Users\\coliveira\\robos\\TC04-Payment-App\\src\\domain\\sharedKernel\\enums\\PaymentStatus.ts",
+    "C:\\Users\\coliveira\\robos\\TC04-Payment-App\\src\\domain\\aggregates\\payment\\usecases\\paymentConfirmation\\PaymentConfirmation.ts"
+  ]
+}
