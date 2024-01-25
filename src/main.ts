@@ -6,7 +6,6 @@ import { WebhookRoute } from './infrastructure/api/webhook.route';
 
 dotenv.config();
 const server = new ExpressAdapter();
-
 const paymentRoute = new PaymentRoute(server);
 const webhookRoute = new WebhookRoute(server);
 
