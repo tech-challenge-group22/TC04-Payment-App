@@ -1,4 +1,13 @@
 /node_modules
 .env
 /dist
+.nyc_output
+/.nyc_output
+/coverage
+coverage
+node_modules
+.env
+package-lock.json
+dist
+.nyc_output
 coverage
