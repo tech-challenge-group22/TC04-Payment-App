@@ -31,6 +31,16 @@ export default class PaymentCheckout implements UseCaseInterface, ICheckout {
         input.orderId,
         input.paymentMethod,
       );
+
+      console.log(
+        'Running MakePayment',
+        'OrderId:',
+        input.orderId,
+        'PaymentMethod:',
+        input.paymentMethod,
+      );
+
+      //response = true
     } catch (error) {
       throw new Error('Failed to comunicate with payment service');
     }
@@ -40,6 +50,7 @@ export default class PaymentCheckout implements UseCaseInterface, ICheckout {
           input.orderId,
           input.paymentMethod,
         );
+        console.log('Running Create Payment');
         return {
           hasError: false,
           paymentId: payment.payment_id,

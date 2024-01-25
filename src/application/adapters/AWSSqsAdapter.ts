@@ -2,6 +2,11 @@ import IPaymentQueue from '../../domain/aggregates/payment/interfaces/IPaymentQu
 import * as dotenv from 'dotenv';
 import { SQS } from 'aws-sdk';
 import cron from 'node-cron';
+import { OrderPaymentController } from '../../domain/aggregates/payment/controllers/OrderPaymentController';
+import {
+  PaymentCheckoutInputDTO,
+  PaymentCheckoutOutputDTO,
+} from '../../domain/aggregates/payment/usecases/paymentCheckout/PaymentCheckoutDTO';
 
 export default class AWSSQSAdapter implements IPaymentQueue {
   private sqs = new SQS();
@@ -11,7 +16,10 @@ export default class AWSSQSAdapter implements IPaymentQueue {
   private constructor() {
     dotenv.config();
 
-    this.AWS.config.update({ region: process.env.AWS_REGION });
+    this.AWS.config.update({
+      region: process.env.AWS_REGION,
+      token: process.env.AWS_SESSION_TOKEN,
+    });
 
     const polling_interval = Number(process.env.MSG_POLLING_INTERVAL);
 
@@ -29,13 +37,14 @@ export default class AWSSQSAdapter implements IPaymentQueue {
     return this._instance;
   }
 
-  async sendMessage(message: string) {
+  async sendMessage(message: any) {
     message = 'Id: ' + this.messageID().toString() + ', ' + message;
 
     const params: SQS.Types.SendMessageRequest = {
-      QueueUrl: `${process.env.AWS_OUTPUT_QUEUE_URL}`,
+      QueueUrl: `${process.env.AWS_WRITE_QUEUE_URL}`,
       MessageBody: JSON.stringify(message),
       MessageGroupId: `${process.env.AWS_MESSAGE_GROUP}`,
+      MessageDeduplicationId: `${this.messageID().toString()}`,
     };
 
     try {
@@ -49,7 +58,7 @@ export default class AWSSQSAdapter implements IPaymentQueue {
   async receiveMessage() {
     try {
       const receiveParams: SQS.Types.ReceiveMessageRequest = {
-        QueueUrl: `${process.env.AWS_INPUT_QUEUE_URL}`,
+        QueueUrl: `${process.env.AWS_READ_QUEUE_URL}`,
         MaxNumberOfMessages: 1,
         WaitTimeSeconds: 20, // Adjust as needed
       };
@@ -63,13 +72,23 @@ export default class AWSSQSAdapter implements IPaymentQueue {
         // Process the message as needed
         const msgBody = JSON.parse(String(message.Body));
 
+        const input: PaymentCheckoutInputDTO = {
+          orderId: Number(msgBody.order_id),
+          order_items: [],
+          paymentMethod: msgBody.payment_method,
+        };
+        const output: PaymentCheckoutOutputDTO =
+          await OrderPaymentController.paymentCheckout(input);
+
         // Delete the message from the queue
+
         await this.sqs
           .deleteMessage({
-            QueueUrl: `${process.env.AWS_INPUT_QUEUE_URL}`,
+            QueueUrl: `${process.env.AWS_READ_QUEUE_URL}`,
             ReceiptHandle: message.ReceiptHandle!,
           })
           .promise();
+        console.log('Deleting message');
       }
     } catch (error) {
       console.error('Error processing message:', error);

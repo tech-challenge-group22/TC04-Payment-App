@@ -12,11 +12,12 @@ import {
 import { GetPaymentStatusUseCase } from '../usecases/getPaymentStatus/GetPaymentStatus';
 import { MySQLPaymentRepository } from '../gateways/PaymentRepository';
 import { PaymentConfirmation } from '../usecases/paymentConfirmation/PaymentConfirmation';
-import ReadPaymentQueue from '../usecases/readPaymentQueue/ReadPaymentQueue';
 
 // Adapters
 import AWSSQSAdapter from '../../../../application/adapters/AWSSqsAdapter';
 import { MercadoPago } from '../services/MercadoPago';
+import PaymentCheckout from '../usecases/paymentCheckout/PaymentCheckout';
+import { PaymentCheckoutInputDTO } from '../usecases/paymentCheckout/PaymentCheckoutDTO';
 
 export class OrderPaymentController {
   static async getPaymentOrder(
@@ -37,26 +38,27 @@ export class OrderPaymentController {
   ): Promise<any> {
     const paymentGateway = new MySQLPaymentRepository();
     const paymentConfirmation = new PaymentConfirmation(paymentGateway);
+
+    const queuePaymentService = AWSSQSAdapter.getInstance();
+
     const input: PaymentConfirmationInputDTO = {
       orderId: order_id,
       paymentStatus: payment_status,
     };
-    const result = await paymentConfirmation.execute(input);
+    const result = await paymentConfirmation.execute(
+      input,
+      queuePaymentService,
+    );
     return result;
   }
 
-  static async readQueue(): Promise<any> {
-    const queueService = AWSSQSAdapter.getInstance();
+  static async paymentCheckout(input: PaymentCheckoutInputDTO): Promise<any> {
     const paymentGateway = new MySQLPaymentRepository();
     const paymentProvider = new MercadoPago();
 
-    const paymentQueue = new ReadPaymentQueue(
-      paymentGateway,
-      queueService,
-      paymentProvider,
-    );
+    const paymentQueue = new PaymentCheckout(paymentGateway, paymentProvider);
 
-    const result = await paymentQueue.execute();
+    const result = await paymentQueue.execute(input);
 
     return result;
   }

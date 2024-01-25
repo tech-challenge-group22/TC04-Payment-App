@@ -1,11 +1,12 @@
 import UseCaseInterface from '../../../../sharedKernel/usecase/UseCaseInterface';
+import IPaymentQueue from '../../interfaces/IPaymentQueue';
 import { PaymentGatewayInterface } from '../../interfaces/gateways/PaymentGatewayInterface';
 import {
   PaymentConfirmationInputDTO,
   PaymentConfirmationOutputDTO,
 } from './PaymentConfirmationDTO';
 
-export class PaymentConfirmation implements UseCaseInterface {
+export class PaymentConfirmation {
   private readonly paymentGateway: PaymentGatewayInterface;
   constructor(private _paymentGateway: PaymentGatewayInterface) {
     this.paymentGateway = _paymentGateway;
@@ -13,6 +14,7 @@ export class PaymentConfirmation implements UseCaseInterface {
 
   async execute(
     input: PaymentConfirmationInputDTO,
+    queuePaymentService: IPaymentQueue,
   ): Promise<PaymentConfirmationOutputDTO> {
     try {
       const validateBody = this.validateBodyRequest(input);
@@ -28,6 +30,15 @@ export class PaymentConfirmation implements UseCaseInterface {
         message: 'Payment successfully updated',
       };
       console.log(output);
+
+      // enviar para fila
+
+      const msg: any = {
+        order_id: input.orderId,
+        payment_status: input.paymentStatus,
+      };
+      queuePaymentService.sendMessage(msg);
+
       return output;
     } catch (error: any) {
       const output = {
