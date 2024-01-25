@@ -16,6 +16,7 @@ import { ReadPaymentQueue } from '../usecases/readPaymentQueue/ReadPaymentQueue'
 
 // Adapters
 import AWSSQSAdapter from '../../../../application/adapters/AWSSqsAdapter';
+import { MercadoPago } from '../services/MercadoPago';
 
 export class OrderPaymentController {
   static async getPaymentOrder(
@@ -47,8 +48,13 @@ export class OrderPaymentController {
   static async readQueue(): Promise<any> {
     const queueService = AWSSQSAdapter.getInstance();
     const paymentGateway = new MySQLPaymentRepository();
+    const paymentProvider = new MercadoPago();
 
-    const paymentQueue = new ReadPaymentQueue(paymentGateway, queueService);
+    const paymentQueue = new ReadPaymentQueue(
+      paymentGateway,
+      queueService,
+      paymentProvider,
+    );
 
     const result = await paymentQueue.execute();
   }
