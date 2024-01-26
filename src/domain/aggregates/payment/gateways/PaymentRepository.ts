@@ -52,6 +52,22 @@ export class MySQLPaymentRepository implements PaymentGatewayInterface {
     return await this.commitDB(myQuery, values);
   }
 
+  async getPaymentPending(): Promise<any> {
+    const values = [1];
+    let myQuery = `
+    SELECT
+        order_id,
+        status_payment_enum_id,
+        last_update
+    FROM
+        order_payment  `;
+    myQuery =
+      myQuery +
+      `  WHERE
+        status_payment_enum_id = ?;`;
+
+    return await this.commitDB(myQuery, values);
+  }
   async createPayment(
     orderId: number,
     paymentMethod: number,
@@ -64,7 +80,8 @@ export class MySQLPaymentRepository implements PaymentGatewayInterface {
       payment.order_id,
       payment.payment_method,
       payment.last_update,
-      payment.status,
+      //payment.status,
+      1,
     ];
     const insertQuery =
       'INSERT INTO order_payment (order_id, payment_method_enum_id, last_update, status_payment_enum_id) VALUES (?, ?, ?, ?)';
@@ -77,9 +94,10 @@ export class MySQLPaymentRepository implements PaymentGatewayInterface {
   }
 
   async confirmPayment(orderId: number, paymentStatus: number) {
-    const values = [1, new Date(), 1];
+    const values = [3, new Date(), orderId];
+    console.log(values);
     const query =
-      'UPDATE order_payment SET status_payment_enum_id=?, last_update=? WHERE id=?';
+      'UPDATE order_payment SET status_payment_enum_id=?, last_update=? WHERE order_id=?';
     const result = await this.commitDB(query, values);
     return result;
   }
