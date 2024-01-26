@@ -3,7 +3,7 @@ import { GetPaymentStatusOutputDTO } from '../../domain/aggregates/payment/useca
 import { OrderPaymentController } from '../../domain/aggregates/payment/controllers/OrderPaymentController';
 import HttpServer from '../../application/ports/HttpServer';
 
-export class PaymentRoute {
+export default class PaymentRoute {
   private readonly httpServer: HttpServer;
 
   constructor(httpServer: HttpServer) {

@@ -4,7 +4,7 @@
   "description": "",
   "main": ".src/main.ts",
   "scripts": {
-    "test": "jest",
+    "test": "nyc cucumber-js",
     "start:dev": "nodemon",
     "start": "node dist/main.js",
     "build": "npx tsc",
@@ -29,6 +29,7 @@
     "url": "^0.11.3"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^10.3.1",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/jsonwebtoken": "^9.0.3",
@@ -49,6 +50,7 @@
     "jest": "^29.5.0",
     "lint-staged": "^14.0.0",
     "nodemon": "^3.0.1",
+    "nyc": "^15.1.0",
     "prettier": "^3.0.1",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
@@ -56,5 +58,18 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "nyc": {
+    "all": true,
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "src/main.ts"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ]
   }
 }

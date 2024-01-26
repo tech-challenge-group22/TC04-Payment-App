@@ -1,7 +1,7 @@
 import ExpressAdapter from './application/adapters/ExpressAdapter';
 import * as dotenv from 'dotenv';
 
-import { PaymentRoute } from './infrastructure/api/payment.route';
+import PaymentRoute from './infrastructure/api/payment.route';
 import { WebhookRoute } from './infrastructure/api/webhook.route';
 import AWSSQSAdapter from './application/adapters/AWSSqsAdapter';
 
