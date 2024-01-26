@@ -21,23 +21,38 @@ export class PaymentConfirmation {
       if (validateBody) {
         return validateBody;
       }
-      const result = await this.paymentGateway.confirmPayment(
-        input.orderId,
-        input.paymentStatus,
-      );
+
+      let pendingList: any = [];
+      pendingList = await this.paymentGateway.getPaymentPending();
+      //console.log("Lista",pendingList)
+
+      if (pendingList.length > 0) {
+        for (let i = 0; i < pendingList.length; i++) {
+          const result = await this.paymentGateway.confirmPayment(
+            pendingList[i].order_id,
+            pendingList[i].paymentStatus,
+          );
+
+          // enviar para fila do SQS
+
+          const msg: any = {
+            order_id: pendingList[i].order_id,
+            payment_status: 3,
+          };
+          queuePaymentService.sendMessage(msg);
+        }
+      } else {
+        const output: PaymentConfirmationOutputDTO = {
+          hasError: false,
+          message: 'Payment successfully updated',
+        };
+      }
+
       const output: PaymentConfirmationOutputDTO = {
         hasError: false,
         message: 'Payment successfully updated',
       };
       console.log(output);
-
-      // enviar para fila
-
-      const msg: any = {
-        order_id: input.orderId,
-        payment_status: input.paymentStatus,
-      };
-      queuePaymentService.sendMessage(msg);
 
       return output;
     } catch (error: any) {

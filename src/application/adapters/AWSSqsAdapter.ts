@@ -38,8 +38,8 @@ export default class AWSSQSAdapter implements IPaymentQueue {
   }
 
   async sendMessage(message: any) {
-    message = 'Id: ' + this.messageID().toString() + ', ' + message;
-
+    //message = 'Id: ' + this.messageID().toString() + ', ' + message;
+    console.error('Sending Message');
     const params: SQS.Types.SendMessageRequest = {
       QueueUrl: `${process.env.AWS_WRITE_QUEUE_URL}`,
       MessageBody: JSON.stringify(message),

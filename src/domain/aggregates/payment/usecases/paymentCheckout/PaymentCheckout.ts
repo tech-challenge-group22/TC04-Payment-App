@@ -9,6 +9,7 @@ import {
 import { PaymentGatewayInterface } from '../../interfaces/gateways/PaymentGatewayInterface';
 import { OrderPaymentEntity } from '../../core/entities/OrderPaymentEntity';
 import ICheckout from '../../interfaces/ICheckout';
+import IPaymentQueue from '../../interfaces/IPaymentQueue';
 
 export default class PaymentCheckout implements UseCaseInterface, ICheckout {
   private readonly repository: PaymentGatewayInterface;
@@ -39,6 +40,15 @@ export default class PaymentCheckout implements UseCaseInterface, ICheckout {
         'PaymentMethod:',
         input.paymentMethod,
       );
+
+      // /// PARA FINS DE TESTES
+
+      // const msg: any = {
+      //   order_id: input.orderId,
+      //   payment_status: 3,
+      // };
+
+      // queuePaymentService.sendMessage(msg);
 
       //response = true
     } catch (error) {

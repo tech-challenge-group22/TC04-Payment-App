@@ -56,6 +56,8 @@ export class OrderPaymentController {
     const paymentGateway = new MySQLPaymentRepository();
     const paymentProvider = new MercadoPago();
 
+    //const queuePaymentService = AWSSQSAdapter.getInstance();
+
     const paymentQueue = new PaymentCheckout(paymentGateway, paymentProvider);
 
     const result = await paymentQueue.execute(input);
