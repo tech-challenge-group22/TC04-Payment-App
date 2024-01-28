@@ -57,4 +57,4 @@ jobs:
 
       - name: Deploy to ECS
         run: |
-          aws ecs update-service --cluster payment/production --service payment-web --force-new-deployment --region ${{ secrets.AWS_REGION }}
+          aws ecs update-service --cluster payment-ecs-cluster --service payment-web --force-new-deployment --region ${{ secrets.AWS_REGION }}
