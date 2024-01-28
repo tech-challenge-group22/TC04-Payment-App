@@ -41,7 +41,7 @@ export default class AWSSQSAdapter implements IPaymentQueue {
     //message = 'Id: ' + this.messageID().toString() + ', ' + message;
     console.error('Sending Message');
     const params: SQS.Types.SendMessageRequest = {
-      QueueUrl: `${process.env.AWS_WRITE_QUEUE_URL}`,
+      QueueUrl: `${process.env.AWS_INPUT_PAYMENT_QUEUE_PROCESSED_URL}`,
       MessageBody: JSON.stringify(message),
       MessageGroupId: `${process.env.AWS_MESSAGE_GROUP}`,
       MessageDeduplicationId: `${this.messageID().toString()}`,
@@ -58,7 +58,7 @@ export default class AWSSQSAdapter implements IPaymentQueue {
   async receiveMessage() {
     try {
       const receiveParams: SQS.Types.ReceiveMessageRequest = {
-        QueueUrl: `${process.env.AWS_READ_QUEUE_URL}`,
+        QueueUrl: `${process.env.AWS_OUTPUT_PAYMENT_QUEUE_RECEIVED_URL}`,
         MaxNumberOfMessages: 1,
         WaitTimeSeconds: 20, // Adjust as needed
       };
@@ -84,7 +84,7 @@ export default class AWSSQSAdapter implements IPaymentQueue {
 
         await this.sqs
           .deleteMessage({
-            QueueUrl: `${process.env.AWS_READ_QUEUE_URL}`,
+            QueueUrl: `${process.env.AWS_OUTPUT_PAYMENT_QUEUE_RECEIVED_URL}`,
             ReceiptHandle: message.ReceiptHandle!,
           })
           .promise();
