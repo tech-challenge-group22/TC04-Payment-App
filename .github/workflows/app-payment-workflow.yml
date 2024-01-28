@@ -45,8 +45,8 @@ jobs:
         run: |
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 839074601035.dkr.ecr.us-east-1.amazonaws.com
           docker build -t payment/production .
-          docker tag tfstate-tcfiap-payment:latest 839074601035.dkr.ecr.us-east-1.amazonaws.com/tfstate-tcfiap-payment:latest
-          docker push 839074601035.dkr.ecr.us-east-1.amazonaws.com/tfstate-tcfiap-payment:latest
+          docker tag payment/production:latest 839074601035.dkr.ecr.us-east-1.amazonaws.com/payment/production:latest
+          docker push 839074601035.dkr.ecr.us-east-1.amazonaws.com/payment/production:latest
 
   deploy-aws:
     runs-on: ubuntu-latest
