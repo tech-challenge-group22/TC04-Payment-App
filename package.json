@@ -4,7 +4,9 @@
   "description": "",
   "main": ".src/main.ts",
   "scripts": {
-    "test": "nyc cucumber-js",
+    "test": "npm run test:cucumber && npm run test:jest",
+    "test:cucumber": "nyc cucumber-js",
+    "test:jest": "jest",
     "start:dev": "nodemon",
     "start": "node dist/main.js",
     "build": "npx tsc",
